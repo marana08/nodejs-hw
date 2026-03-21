@@ -9,6 +9,5 @@ export const connectMongoDB = async () => {
     console.error('❌ Failed to connect to MongoDB:', error.message);
     process.exit(1);
   }
-  console.log(mongoose.connection.name);
 };
 
