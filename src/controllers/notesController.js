@@ -13,6 +13,7 @@ export const getAllNotes = async (req, res, next) => {
 
     const filter = { userId: req.user._id };
 
+    // Фільтр за тегом
     if (tag) {
       if (!TAGS.includes(tag)) {
         throw createHttpError(400, 'Invalid tag');
@@ -20,6 +21,7 @@ export const getAllNotes = async (req, res, next) => {
       filter.tag = tag;
     }
 
+    // Повнотекстовий пошук
     if (search) {
       filter.$text = { $search: search };
     }
@@ -96,7 +98,7 @@ export const updateNote = async (req, res, next) => {
         userId: req.user._id,
       },
       req.body,
-      { new: true }
+      { returnDocument: 'after' } // ✅ для Mongoose 9+
     );
 
     if (!updatedNote) {
@@ -127,7 +129,7 @@ export const deleteNote = async (req, res, next) => {
       throw createHttpError(404, 'Note not found');
     }
 
-    res.status(204).send();
+    res.status(200).json(deletedNote);
   } catch (err) {
     next(err);
   }

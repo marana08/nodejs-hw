@@ -3,10 +3,12 @@ import { Session } from '../models/session.js';
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/time.js';
 
 export const createSession = async (userId) => {
-const session = await Session.create({
+  const accessToken = crypto.randomBytes(32).toString('hex');
+  const refreshToken = crypto.randomBytes(32).toString('hex');
+  const session = await Session.create({
     userId,
-    accessToken: crypto.randomUUID(),
-    refreshToken: crypto.randomUUID(),
+    accessToken,
+    refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
     refreshTokenValidUntil: new Date(Date.now() + ONE_DAY),
   });
@@ -22,11 +24,16 @@ export const setSessionCookies = (res, session) => {
   };
 
   res.cookie('accessToken', session.accessToken, {
-...cookieOptions,
+    ...cookieOptions,
     maxAge: FIFTEEN_MINUTES,
   });
 
   res.cookie('refreshToken', session.refreshToken, {
+    ...cookieOptions,
+    maxAge: ONE_DAY,
+  });
+
+  res.cookie('sessionId', session._id.toString(), {
     ...cookieOptions,
     maxAge: ONE_DAY,
   });
