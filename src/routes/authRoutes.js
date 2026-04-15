@@ -25,9 +25,7 @@ router.post(
 
 router.post(
   '/auth/login',
-  celebrate({
-    [Segments.BODY]: loginUserSchema,
-  }),
+  celebrate({ [Segments.BODY]: loginUserSchema }),
   loginUser,
 );
 
@@ -37,13 +35,13 @@ router.post('/auth/logout', logoutUser);
 
 router.post(
   '/auth/request-reset-email',
-  celebrate(requestResetEmailSchema),
+  celebrate({ [Segments.BODY]: requestResetEmailSchema }),
   requestResetEmail,
 );
 
 router.post(
   '/auth/reset-password',
-  celebrate(resetPasswordSchema),
+  celebrate({ [Segments.BODY]: resetPasswordSchema }),
   resetPassword,
 );
 
