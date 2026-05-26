@@ -1,0 +1,48 @@
+import { celebrate, Segments } from 'celebrate';
+import { Router } from 'express';
+import {
+  loginUserSchema,
+  registerUserSchema,
+  requestResetEmailSchema,
+  resetPasswordSchema,
+} from '../validations/authValidation.js';
+import {
+  loginUser,
+  logoutUser,
+  refreshUserSession,
+  registerUser,
+  requestResetEmail,
+  resetPassword,
+} from '../controllers/authController.js';
+
+const router = Router();
+
+router.post(
+  '/auth/register',
+  celebrate({ [Segments.BODY]: registerUserSchema }),
+  registerUser,
+);
+
+router.post(
+  '/auth/login',
+  celebrate({ [Segments.BODY]: loginUserSchema }),
+  loginUser,
+);
+
+router.post('/auth/refresh', refreshUserSession);
+
+router.post('/auth/logout', logoutUser);
+
+router.post(
+  '/auth/request-reset-email',
+  celebrate({ [Segments.BODY]: requestResetEmailSchema }),
+  requestResetEmail,
+);
+
+router.post(
+  '/auth/reset-password',
+  celebrate({ [Segments.BODY]: resetPasswordSchema }),
+  resetPassword,
+);
+
+export default router;
